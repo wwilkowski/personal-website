@@ -2,6 +2,9 @@ import { Link } from "gatsby"
 import styled from "@emotion/styled"
 import PropTypes from "prop-types"
 import React from "react"
+import Switch from "react-switch"
+import sunIcon from "../images/sun-icon.svg"
+import moonIcon from "../images/moon-icon.svg"
 
 const Content = styled.div`
   max-width: 860px;
@@ -72,7 +75,7 @@ const SiteHeader = styled.header`
   justify-content: center;
 `
 
-const Header = ({ siteTitle }) => (
+const Header = ({ siteTitle, theme }) => (
   <SiteHeader>
     <Content>
       <p>
@@ -81,6 +84,16 @@ const Header = ({ siteTitle }) => (
         <GitHubLink href="https://github.com/niklasmtj/gatsby-starter-julia">
           GitHub
         </GitHubLink>
+        <Switch
+          onChange={() => theme.updateTheme(theme.name === "light" ? "dark" : "light")}
+          checked={theme.name === "dark"}
+          onColor="#222"
+          offColor="#333"
+          checkedIcon={<img src={moonIcon} alt="moon icon" />}
+          uncheckedIcon={<img src={sunIcon} alt="sun icon" />}
+          boxShadow="0 0 2px 3px #B38CD9"
+          activeBoxShadow="0 0 2px 3px #dfb3e6"
+        />
       </p>
     </Content>
   </SiteHeader>
