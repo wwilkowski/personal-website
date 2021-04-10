@@ -37,10 +37,13 @@ const ThemedLayout = styled.div`
 `
 
 const Content = styled.div`
+  max-width: 900px;
   margin: 0 auto;
-  max-width: 860px;
-  padding: 0 1.0875rem 1rem;
-  padding-top: 0;
+  padding: 0 2rem;
+
+  @media (min-width: 900px) {
+    padding: 0;
+  }
 `
 
 const GatsbyLink = styled.a`

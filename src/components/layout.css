@@ -4,9 +4,9 @@ code {
 
 body {
   margin: 0;
-  font-family: "Nunito", "Avenir", "Helvetica", "sans-serif";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: 'Roboto';
 }
 article,
 aside,
@@ -201,6 +201,7 @@ html {
 }
 body {
   color: hsla(0, 0%, 0%, 0.8);
+  font-size: 16px;
   font-weight: normal;
   word-wrap: break-word;
   font-kerning: normal;

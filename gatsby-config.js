@@ -10,13 +10,6 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        name: `markdown-pages`,
-        path: `${__dirname}/src/content`,
-      },
-    },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
         name: `images`,
         path: `${__dirname}/src/images`,
       },
@@ -68,6 +61,23 @@ module.exports = {
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // 'gatsby-plugin-offline',
-    `gatsby-plugin-emotion`
+    `gatsby-plugin-emotion`,
+    {
+      resolve: `gatsby-source-datocms`,
+      options: {
+        apiToken: `7cdf93a27851d74617fb509668cf90`,
+        environment: `main`,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-google-fonts`,
+      options: {
+        fonts: [
+          `Roboto`,
+          `Open Sans` // you can also specify font weights and styles
+        ],
+        display: 'swap'
+      }
+    }
   ],
 }

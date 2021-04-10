@@ -39,28 +39,27 @@ const IndexPage = ({ data }) => {
       <SEO title="Blog" />
       <Content>
         <h1>Blog</h1>
-        {data.allMarkdownRemark.edges
+        {data.allDatoCmsArticle.edges
           .filter(({ node }) => {
-            const rawDate = node.frontmatter.rawDate
+            const rawDate = node.date
             const date = new Date(rawDate)
             return date < new Date()
           })
           .map(({ node }) => (
             <div key={node.id}>
               <Link
-                to={node.frontmatter.path}
+                to={node.slug}
                 css={css`
                   text-decoration: none;
                   color: inherit;
                 `}
               >
-                <MarkerHeader>{node.frontmatter.title}</MarkerHeader>
+                <MarkerHeader>{node.title}</MarkerHeader>
               </Link>
               <div>
-                <ArticleDate>{node.frontmatter.date}</ArticleDate>
-                <ReadingTime> - {node.fields.readingTime.text}</ReadingTime>
+                <ArticleDate>{node.date}</ArticleDate>
+                <ReadingTime> - NONE</ReadingTime>
               </div>
-              <p>{node.excerpt}</p>
             </div>
           ))}
       </Content>
@@ -77,27 +76,14 @@ export const query = graphql`
         title
       }
     }
-    allMarkdownRemark(
-      sort: { fields: [frontmatter___date], order: DESC }
-      filter: { frontmatter: { draft: { eq: false } } }
-    ) {
-      totalCount
+    allDatoCmsArticle {
       edges {
         node {
           id
-          frontmatter {
-            title
-            date(formatString: "DD MMMM, YYYY")
-            rawDate: date
-            path
-          }
-          fields {
-            slug
-            readingTime {
-              text
-            }
-          }
-          excerpt
+          slug
+          title
+          date
+          tags
         }
       }
     }

@@ -3,6 +3,16 @@ import { graphql } from "gatsby"
 import styled from "@emotion/styled"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
+import Prism from "prismjs";
+import ReactMarkdown from "react-markdown";
+
+require("prismjs/components/prism-javascript");
+require("prismjs/components/prism-haml");
+require("prismjs/components/prism-bash");
+require("prismjs/components/prism-jsx");
+require("prismjs/components/prism-json");
+require("prismjs/components/prism-graphql");
+
 
 const Content = styled.div`
   margin: 0 auto;
@@ -26,64 +36,110 @@ const HeaderDate = styled.h3`
   color: #606060;
 `
 
-// STYLE THE TAGS INSIDE THE MARKDOWN HERE
-const MarkdownContent = styled.div`
-  a {
-    text-decoration: none;
-    position: relative;
+const StyledImage = styled.img`
+  padding: 3rem 0;
+`;
 
-    background-image: linear-gradient(
-      rgba(255, 250, 150, 0.8),
-      rgba(255, 250, 150, 0.8)
+const StyledQuote = styled.blockquote`
+  color: #777;
+  margin: 1.5rem 0;
+  padding: 0.5rem 0 0.5rem 1rem;
+  position: relative;
+  border-left: 0.25em solid #ddd;
+`;
+
+
+const StyledCode = styled.code`
+  background: #f1f1f1;
+  padding: 0.3rem;
+  margin: 0 0.2rem 0 0;
+`;
+
+
+function image(props) {
+  return (
+    <StyledImage src={props.src} alt="">
+      {props.children}
+    </StyledImage>
+  );
+}
+
+function blockquote(props) {
+  return <StyledQuote>{props.children}</StyledQuote>;
+}
+
+function paragraph(props) {
+  return <p>{props.children}</p>;
+}
+
+function inlineCode(props) {
+  return <StyledCode>{props.children}</StyledCode>;
+}
+
+function code(props) {
+  if (!props.language) {
+    return (
+      <pre>
+        <code dangerouslySetInnerHTML={{ __html: props.value }} />
+      </pre>
     );
-    background-repeat: no-repeat;
-    background-size: 100% 0.2em;
-    background-position: 0 88%;
-    transition: background-size 0.25s ease-in;
-    &:hover {
-      background-size: 100% 88%;
-    }
+  } else {
+    const html = Prism.highlight(props.value, Prism.languages[props.language]);
+    const cls = "language-" + props.language;
+    return (
+      <pre className={cls}>
+        <code dangerouslySetInnerHTML={{ __html: html }} className={cls} />
+      </pre>
+    );
   }
+}
 
-  a > code:hover {
-    text-decoration: underline;
-  }
-`
 
 export default ({ data }) => {
-  const post = data.markdownRemark
+  const post = data.datoCmsArticle
   return (
     <Layout>
       <SEO
-        title={post.frontmatter.title}
-        description={post.frontmatter.description || post.excerpt}
+        title={post.title}
+        description={post.description}
       />
       <Content>
-        <MarkedHeader>{post.frontmatter.title}</MarkedHeader>
+        <MarkedHeader>{post.title}</MarkedHeader>
         <HeaderDate>
-          {post.frontmatter.date} - {post.fields.readingTime.text}
+          {post.date} - NONE
         </HeaderDate>
-        <MarkdownContent dangerouslySetInnerHTML={{ __html: post.html }} />
+        <ReactMarkdown
+          source={post.content}
+          renderers={{
+            image: image,
+            code: code,
+            blockquote: blockquote,
+            paragraph: paragraph,
+            inlineCode: inlineCode
+          }}
+        />
       </Content>
     </Layout>
   )
 }
 
 export const pageQuery = graphql`
-  query($path: String!) {
-    markdownRemark(frontmatter: { path: { eq: $path } }) {
-      html
-      excerpt(pruneLength: 160)
-      frontmatter {
-        date(formatString: "DD MMMM, YYYY")
-        path
+  query BlogPostBySlug($slug: String) {
+    site {
+      siteMetadata {
         title
-      }
-      fields {
-        readingTime {
-          text
-        }
+        author
       }
     }
+    datoCmsArticle(slug: { eq: $slug }) {
+      id
+      title
+      date(formatString: "DD MMMM YYYY", locale: "pl-PL")
+      description
+      content
+      tags
+      slug
+    }
   }
-`
+`;
+
